@@ -1,0 +1,45 @@
+= ovo_template-snmptraps_summarizer
+
+code :: https://github.com/kachick/ovo_template-snmptraps_summarizer
+bugs :: https://github.com/kachick/ovo_template-snmptraps_summarizer/issues
+gem  :: https://rubygems.org/gems/ovo_template-snmptraps_summarizer
+
+== Description
+
+An utility for the OVO(OpenViewOperations).
+Convert to some CSV files from "trap.dat".
+
+== Feutures
+
+* Supportting formatted version is "5".
+  See the header of "trap.dat"
+
+      > head trap.dat
+
+* Author is just a user of OVO, Of course "No Warranty" :)
+
+== Usage
+
+    > ovo_template-snmptraps_summarizer trap.dat [*trap.dat]
+
+== Requirements
+
+* Ruby 1.9.3
+  
+  Focusing
+  
+  * 1.9.3-p194
+
+* striuct - 0.3.0
+
+== Installation
+
+* gem install ovo_template-snmptraps_summarizer
+
+== License
+
+GPL 3.0
+
+Copyright (c) 2010-2012 Kenichi Kamiya
+
+See the file COPYING for further details.

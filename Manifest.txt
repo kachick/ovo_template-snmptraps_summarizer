@@ -1,0 +1,10 @@
+README.rdoc
+COPYING
+Manifest.txt
+Rakefile
+History.txt
+lib/ovo_templatesnmptraps_summarizer/csvformatter.rb
+lib/openviewoperations/template.rb
+lib/openviewoperations/template/parser.rb
+lib/openviewoperations/template/parser/snmptraps.rb
+bin/ovo_template-snmptraps_summarizer
