@@ -50,6 +50,7 @@ module OVO_TemplateSNMPTraps_Summarizer
           CSV.open "#{base_path}.oneline.csv", "w:#{encoding}", csv_options do |oneline|
           CSV.open "#{base_path}.db-table.main.csv", "w:#{encoding}", headers: FORMATTER::DBMain.headers, write_headers: true do |db_main|
           CSV.open "#{base_path}.db-table.match-pair.csv", "w:#{encoding}", headers: %w[MainKey Index ConditionID Description IPAddress], write_headers: true do |db_match_pair|
+          CSV.open "#{base_path}.db-table.match-pair+.csv", "w:#{encoding}", headers: %w[MainKey Index ConditionID Description Enterprise Generic Specific IPAddress], write_headers: true do |db_match_pair_plus|
             db_match_pair_mainkey = 1
             
             template.each_with_ovo_index do |cond, idx|
@@ -65,14 +66,19 @@ module OVO_TemplateSNMPTraps_Summarizer
               if cond.core.nodes && !(cond.core.nodes.empty?)
                 cond.core.nodes.each do |node|
                   db_match_pair << [db_match_pair_mainkey, idx, cond.condition_id, cond.description, node.ipaddress]
+                  db_match_pair_plus << [db_match_pair_mainkey, idx, cond.condition_id, cond.description,
+                                          cond.core.enterprise,  cond.core.generic,  cond.core.specific,  node.ipaddress]
                   db_match_pair_mainkey += 1
                 end
               else
                 db_match_pair << [db_match_pair_mainkey, idx, cond.condition_id, cond.description, nil]
+                  db_match_pair_plus << [db_match_pair_mainkey, idx, cond.condition_id, cond.description,
+                                          cond.core.enterprise,  cond.core.generic,  cond.core.specific,  nil]
                 db_match_pair_mainkey += 1
               end
               
             end
+          end
           end
           end
           end
