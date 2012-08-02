@@ -1,66 +1,6 @@
 #!/usr/local/bin/ruby -w
-#  Copyright (C) 2011  Kenichi Kamiya
+# Copyright (C) 2011  Kenichi Kamiya
 
-require 'logger'
-require_relative '../lib/openviewoperations/template'
-require_relative '../lib/openviewoperations/template/parser'
-require_relative '../lib/ovo_templatesnmptraps_summarizer/csvformatter'
-
-class String
-  def pathable
-    gsub(%r![/:*?"<>|\\]!, '!')
-  end
-end
-
-module OVO_TemplateSNMPTraps_Summarizer
-
-  VERSION = '0.0.1'.freeze
-
-  include OpenViewOperations
-
-  FORMATTER = CSVFormatter
-  TITLE     = FORMATTER.title
-  
-  module_function
-  
-  def run
-    unless ARGV.length >= 1
-      abort "usage: #{$PROGRAM_NAME} trap.dat [*trap.dat]"
-    end
-    
-    ARGV.each do |path|
-      logger = Logger.new "#{path}.log"
-      logger.progname = :'OVOTemplate(SNMPTraps)Summarizer'
-
-      begin
-        templates = Template.load path
-      rescue Exception
-        logger.fatal 'Error occurred'
-        raise
-      else
-        templates.each_pair do |name, template|
-          base_path = "#{path}.#{name.pathable}"
-          
-          open "#{base_path}.csv", 'w:Windows-31J' do |out|
-          open "#{base_path}.oneline.csv", 'w:Windows-31J' do |oneline|
-            out.puts TITLE
-            oneline.puts TITLE
-            
-            template.each_with_ovo_index do |cond, idx|
-              formatter = FORMATTER.new cond, idx, template
-              oneline_formatter = FORMATTER::OneLine.new cond, idx, template
-              out.puts formatter
-              oneline.puts oneline_formatter
-            end
-          end
-          end
-        end
-
-        logger.info 'Complete'
-      end
-    end
-  end
-
-end
+require_relative '../lib/ovo_templatesnmptraps_summarizer'
 
 OVO_TemplateSNMPTraps_Summarizer.run
