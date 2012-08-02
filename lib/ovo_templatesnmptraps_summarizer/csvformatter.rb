@@ -139,8 +139,14 @@ module OVO_TemplateSNMPTraps_Summarizer
     end
     
     class OneLine < self    
-      def to_s
-        super.gsub(/\n(?!\Z)/){'\n'}
+      def row
+        super.map{|field|
+          if field.kind_of? String
+            field.gsub("\n"){'\n'}
+          else
+            field
+          end
+        }
       end
       
       private

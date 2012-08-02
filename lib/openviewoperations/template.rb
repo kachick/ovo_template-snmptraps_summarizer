@@ -54,6 +54,7 @@ module OpenViewOperations
     def_delegators :conditions, :each, :each_with_index
     
     def each_with_ovo_index
+      return to_enum(__callee__) unless block_given?
       each_with_index {|v, i|yield v, i + 1}
     end
   end
