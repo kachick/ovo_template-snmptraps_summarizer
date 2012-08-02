@@ -6,9 +6,11 @@ require 'csv'
 module OVO_TemplateSNMPTraps_Summarizer
 
   class CSVFormatter
+    
     extend Forwardable
     
     module ParameterFormattable
+    
       attr_accessor :param_separator
     
       def to_s
@@ -18,6 +20,7 @@ module OVO_TemplateSNMPTraps_Summarizer
           end
         }.join param_separator
       end
+      
     end
     
     COLUMNS = [
@@ -63,6 +66,11 @@ module OVO_TemplateSNMPTraps_Summarizer
     ]
     
     class << self
+      
+      def columns
+        COLUMNS
+      end
+      
       def headers
         COLUMNS.map(&:first)
       end
@@ -85,7 +93,7 @@ module OVO_TemplateSNMPTraps_Summarizer
     def_delegators :self.class, :headers, :title
     
     def row
-      COLUMNS.map{|*, mname|instance_eval mname}
+      self.class.columns.map{|*, mname|instance_eval mname}
     end
     
     def to_s
@@ -139,6 +147,7 @@ module OVO_TemplateSNMPTraps_Summarizer
     end
     
     class OneLine < self    
+      
       def row
         super.map{|field|
           if field.kind_of? String
@@ -154,7 +163,21 @@ module OVO_TemplateSNMPTraps_Summarizer
       def param_separator
         ' | '
       end
+      
     end
+    
+    class DBMain < self
+      
+      class << self
+        
+        def columns
+          super.reject{|pair|pair.first == 'c/Nodes'}
+        end
+        
+      end
+      
+    end
+
   end
 
 end
