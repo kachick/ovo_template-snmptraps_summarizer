@@ -1,16 +1,11 @@
-gem 'hoe', '~> 3.0.6'
-require 'hoe'
-require 'fileutils'
+#!/usr/bin/env rake
+require 'bundler/gem_tasks'
 
-Hoe.plugin :newgem
+require 'rake/testtask'
 
-$hoe = Hoe.spec 'ovo_template-snmptraps_summarizer' do
-  developer 'Kenichi Kamiya', 'kachick1+ruby@gmail.com'
-  self.rubyforge_name       = name
-  require_ruby_version '>= 1.9.3'
-  dependency 'striuct', '~> 0.3.0', :runtime
-  dependency 'yard', '>= 0.8.1', :development
+task default: [:test]
+
+Rake::TestTask.new do |tt|
+  tt.verbose = true
 end
 
-require 'newgem/tasks'
-Dir['tasks/**/*.rake'].each {|t|load t}

@@ -1,12 +1,12 @@
-# Copyright (C) 2011  Kenichi Kamiya
-
 require 'strscan'
 require 'forwardable'
 
 module OpenViewOperations; class Template
 
   class Parser
+
     module TextUtil
+
       module_function
     
       def generate_naked_pattern(prefix)
@@ -24,14 +24,14 @@ module OpenViewOperations; class Template
       def generate_flag_pattern(prefix)
         /^ +#{Regexp.escape prefix}\n/
       end
+
     end
     
     extend Forwardable
     extend TextUtil
     include TextUtil
 
-    class MalformedSourceError < StandardError
-    end
+    class MalformedSourceError < StandardError; end
 
     SET_DEFINES = [
       [:SERVERLOGONLY,               :flag],
@@ -62,9 +62,12 @@ module OpenViewOperations; class Template
     ].each(&:freeze).freeze
     
     class << self
+
+      # @return [Hash<Template>]
       def parse(str)
         new(str).parse
       end
+
     end
     
     def initialize(str)
@@ -73,6 +76,7 @@ module OpenViewOperations; class Template
       @templates = {}
     end
 
+    # @return [Hash<Template>]
     def parse
       @version = parse_template_version
       
@@ -318,5 +322,3 @@ module OpenViewOperations; class Template
   end
   
 end; end
-
-require_relative 'parser/snmptraps'

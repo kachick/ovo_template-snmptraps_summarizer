@@ -1,20 +1,8 @@
-# Copyright (C) 2011  Kenichi Kamiya
+require_relative 'parser'
 
-require 'striuct'
+module OpenViewOperations; class Template
 
-module OpenViewOperations; class Template; class Parser
-
-  class SNMPTraps < self
-    
-    Core = Striuct.define do
-      member :enterprise, String
-      member :generic, Integer
-      member :specific, Integer
-      member :varbinds, CAN(:each_pair)
-      alias_member :varbind, :varbinds
-      member :nodes, GENERICS(Node)
-      alias_member :node, :nodes
-    end
+  class SNMPTrapsParser < Parser
     
     private
     
@@ -64,6 +52,8 @@ module OpenViewOperations; class Template; class Parser
 
   end
 
-  SNMP = SNMPTraps
+  SNMPParser = SNMPTrapsParser
 
-end; end; end
+end; end
+
+require_relative 'snmptrapsparser/core'

@@ -2,7 +2,7 @@
 
 require 'logger'
 require_relative 'openviewoperations/template'
-require_relative 'openviewoperations/template/parser'
+require_relative 'ovo_templatesnmptraps_summarizer/version'
 require_relative 'ovo_templatesnmptraps_summarizer/csvformatter'
 
 class String
@@ -12,8 +12,6 @@ class String
 end
 
 module OVO_TemplateSNMPTraps_Summarizer
-
-  VERSION = '0.0.1'.freeze
 
   include OpenViewOperations
 
@@ -48,6 +46,7 @@ module OVO_TemplateSNMPTraps_Summarizer
           
           CSV.open "#{base_path}.csv", "w:#{encoding}", csv_options do |out|
           CSV.open "#{base_path}.oneline.csv", "w:#{encoding}", csv_options do |oneline|
+            CSV.open "#{base_path}.oneline-each_ip.csv", "w:#{encoding}", headers: ['IP', *FORMATTER.headers], write_headers: true do |oneline_each_ip|
           CSV.open "#{base_path}.db-table.main.csv", "w:#{encoding}", headers: FORMATTER::DBMain.headers, write_headers: true do |db_main|
           CSV.open "#{base_path}.db-table.match-pair.csv", "w:#{encoding}", headers: %w[MainKey Index ConditionID Description IPAddress], write_headers: true do |db_match_pair|
           CSV.open "#{base_path}.db-table.match-pair+.csv", "w:#{encoding}", headers: %w[MainKey Index ConditionID Description Enterprise Generic Specific IPAddress], write_headers: true do |db_match_pair_plus|
@@ -65,19 +64,22 @@ module OVO_TemplateSNMPTraps_Summarizer
               
               if cond.core.nodes && !(cond.core.nodes.empty?)
                 cond.core.nodes.each do |node|
+                  oneline_each_ip << [node.ipaddress, *oneline_formatter.row]
                   db_match_pair << [db_match_pair_mainkey, idx, cond.condition_id, cond.description, node.ipaddress]
                   db_match_pair_plus << [db_match_pair_mainkey, idx, cond.condition_id, cond.description,
                                           cond.core.enterprise,  cond.core.generic,  cond.core.specific,  node.ipaddress]
                   db_match_pair_mainkey += 1
                 end
               else
+                oneline_each_ip << [nil, *oneline_formatter.row]
                 db_match_pair << [db_match_pair_mainkey, idx, cond.condition_id, cond.description, nil]
-                  db_match_pair_plus << [db_match_pair_mainkey, idx, cond.condition_id, cond.description,
+                db_match_pair_plus << [db_match_pair_mainkey, idx, cond.condition_id, cond.description,
                                           cond.core.enterprise,  cond.core.generic,  cond.core.specific,  nil]
                 db_match_pair_mainkey += 1
               end
               
             end
+          end
           end
           end
           end
